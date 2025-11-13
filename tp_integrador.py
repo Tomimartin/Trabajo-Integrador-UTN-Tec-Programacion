@@ -133,7 +133,12 @@ def main():
                 print(f"Pais:{p['nombre']} | Población:{p['poblacion']} habitantes | Superficie:{p['superficie']}km² | Continente:{p['continente']}")
 
         elif opcion == "2":
-            cont = input("Ingrese continente: ")
+            cont = input("Ingrese continente: ").lower()
+            continentes_validos = ["américa", "europa", "asia", "áfrica", "oceania", "oceanía", "antártida", "antartida"]
+            if cont not in continentes_validos:
+             print("❌ Continente inválido. Intente nuevamente.")
+             continue
+            
             resultado = filtrar_por_continente(paises, cont)
             
             
@@ -141,52 +146,88 @@ def main():
                 print(f"Pais:{p['nombre']} | Población:{p['poblacion']} habitantes | Superficie:{p['superficie']}km² | Continente:{p['continente']}")
 
         elif opcion == "3":
-            while True:
-             min_p = int(input("Población mínima: "))
-             max_p = int(input("Población máxima: "))
-             if max_p > min_p:
-              resultado = filtrar_por_poblacion(paises, min_p, max_p)
-              
-              if len(resultado) == 0:
-                print("❌ No se encontraron países dentro de ese rango de población.")
-                break
-            
-              for p in resultado:
+         while True:
+           try:
+            min_p = int(input("Población mínima: "))
+            max_p = int(input("Población máxima: "))
+           except ValueError:
+            print("❌ Debe ingresar números enteros. Intente nuevamente.")
+            continue
+
+           if min_p < 0 or max_p < 0:
+            print("❌ La población no puede ser negativa.")
+            continue
+
+           if max_p <= min_p:
+            print("❌ La población máxima debe ser mayor que la mínima.")
+            continue
+
+           resultado = filtrar_por_poblacion(paises, min_p, max_p)
+
+           if len(resultado) == 0:
+            print("⚠ No se encontraron países en ese rango de población.")
+           else:
+            for p in resultado:
                 print(f"Pais:{p['nombre']} | Población:{p['poblacion']} habitantes | Superficie:{p['superficie']}km² | Continente:{p['continente']}")
-              
-              break
-             else:
-                print("Ingrese un rango mayor al mínimo.")
+
+           break
+
                 
 
         elif opcion == "4":
-          while True:
+         while True:
+           try:
             min_s = int(input("Superficie mínima: "))
             max_s = int(input("Superficie máxima: "))
-            if max_s > min_s:
-             resultado = filtrar_por_superficie(paises, min_s, max_s)
-             
-             if len(resultado) == 0:
-                print("❌ No se encontraron países dentro de ese rango de superficie.")
-                break
-             for p in resultado:
+           except ValueError:
+            print("❌ Debe ingresar números enteros. Intente nuevamente.")
+            continue
+
+           if min_s < 0 or max_s < 0:
+            print("❌ La superficie no puede ser negativa.")
+            continue
+
+           if max_s <= min_s:
+            print("❌ La superficie máxima debe ser mayor que la mínima.")
+            continue
+
+           resultado = filtrar_por_superficie(paises, min_s, max_s)
+
+           if len(resultado) == 0:
+            print("⚠ No se encontraron países en ese rango de superficie.")
+           else:
+            for p in resultado:
                 print(f"Pais:{p['nombre']} | Población:{p['poblacion']} habitantes | Superficie:{p['superficie']}km² | Continente:{p['continente']}")
-                
-             break
-            else:
-               print("Ingrese un rango mayor al mínimo.") 
+
+           break
+ 
 
         elif opcion == "5":
             print("Ordenar por: 1-Nombre 2-Población 3-Superficie")
             criterio = input("Elija opción: ")
-            descendente = input("¿Descendente? (s/n): ").lower() == "s"
+            
+            if criterio not in ["1", "2", "3"]:
+              print("❌ Opción inválida. Debe elegir 1, 2 o 3.")
+              continue
+          
+            descendente = input("¿Descendente? (s/n): ").lower()
+            
+            if descendente not in ["s", "n"]:
+              print("❌ Debe ingresar 's' o 'n'.")
+              continue
+
+            descendente = (descendente == "s") 
+            
+            
             if criterio == "1":
                 clave = "nombre"
             elif criterio == "2":
                 clave = "poblacion"
             else:
                 clave = "superficie"
+            
             ordenados = ordenar_paises(paises[:], clave, descendente)# Hago una copia para no modificar la lista original
+            
             for p in ordenados:
                 print(f"Pais:{p['nombre']} | Población:{p['poblacion']} habitantes | Superficie:{p['superficie']}km² | Continente:{p['continente']}")
 
